@@ -1,9 +1,56 @@
+<<<<<<< Original
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.unt.sell.contextmon">
 
-    <application android:allowBackup="true" android:label="@string/app_name"
-        android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme">
+    <uses-sdk
+        android:minSdkVersion="4"
+        android:targetSdkversion="19" />
 
+    <!-- Required if you want to see outgoing calls -->
+    <!-- <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" /> -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="ContextMon"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="edu.unt.sell.contextmon.MainActivity"
+            android:label="ContextMon">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".BroadcastMonitoringService"
+            android:label="">
+        </service>
+
+        <provider
+            android:name=".contentprovider.BroadcastContentProvider"
+            android:authorities="edu.unt.sell.contextmon"
+            android:exported="false" >
+        </provider>
+        <receiver android:name=".AnyBroadcastReceiver" android:process=":receiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
+
+=======
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <application>
+        <activity android:name="edu.unt.sell.contextmon.MainActivity"
+            android:label="@string/title_activity_main"
+            >
+        </activity>
+    </application>
+
+</manifest>
+>>>>>>> Added
