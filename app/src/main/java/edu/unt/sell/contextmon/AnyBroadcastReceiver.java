@@ -33,7 +33,7 @@ public class AnyBroadcastReceiver extends BroadcastReceiver {
 
         Log.d(TAG, "Received broadcast intent is: " + pIntent.toString());
         String action = pIntent.getAction();
-        String extraString = getExtrasString(pIntent);
+        String extrasString = getExtrasString(pIntent);
 
         // you might need to create an API service to get description of intent instead of just
         // saving the intent action and extras string

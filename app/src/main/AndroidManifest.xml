@@ -37,10 +37,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <application>
-        <receiver android:name="edu.unt.sell.contextmon.AnyBroadcastReceiver"
+        <service android:name="edu.unt.sell.contextmon.BroadcastMonitoringService"
             android:exported="true"
             android:enabled="true" >
-        </receiver>
+        </service>
     </application>
 
 </manifest>
