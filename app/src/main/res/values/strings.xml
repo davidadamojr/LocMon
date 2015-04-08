@@ -4,4 +4,7 @@
 
     <string name="service_status">Service is running...</string>
     <string name="action_settings">Settings</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>

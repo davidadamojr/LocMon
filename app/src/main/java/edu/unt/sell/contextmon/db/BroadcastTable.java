@@ -14,11 +14,13 @@ public class BroadcastTable {
     public static final String COLUMN_ACTION = "action";
     public static final String COLUMN_EXTRAS = "extras";
     public static final String COLUMN_TIMESTAMP = "timestamp";
+    public static final String COLUMN_UPLOADED = "uploaded";
 
     // Database creation SQL statement
     private static final String DATABASE_CREATE = "create table " + TABLE_NAME + "(" + COLUMN_ID
             + " integer primary key autoincrement, " + COLUMN_ACTION + " text not null, " +
-            COLUMN_EXTRAS + " text not null," + COLUMN_TIMESTAMP + " text not null" + ");";
+            COLUMN_EXTRAS + " text not null," + COLUMN_TIMESTAMP + " text not null, " +
+            COLUMN_UPLOADED + " integer default 0);";
 
     public static void onCreate(SQLiteDatabase database){
         database.execSQL(DATABASE_CREATE);

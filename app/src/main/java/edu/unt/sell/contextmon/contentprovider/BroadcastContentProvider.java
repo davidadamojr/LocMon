@@ -77,9 +77,12 @@ public class BroadcastContentProvider extends ContentProvider {
     }
 
     private void checkColumns(String[] projection){
+        // checks if the caller has requested a column that does not exist in the database
+
         String[] available = {
             BroadcastTable.COLUMN_ACTION, BroadcastTable.COLUMN_EXTRAS,
-            BroadcastTable.COLUMN_TIMESTAMP, BroadcastTable.COLUMN_ID
+            BroadcastTable.COLUMN_TIMESTAMP, BroadcastTable.COLUMN_ID,
+            BroadcastTable.COLUMN_UPLOADED
         };
         if (projection != null){
             HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
