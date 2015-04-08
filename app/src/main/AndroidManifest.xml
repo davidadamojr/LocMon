@@ -1,8 +1,10 @@
-<<<<<<< Original
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.unt.sell.contextmon"
+    android:versionCode="7"
+    android:versionName="1">
 
     <uses-sdk
-        android:minSdkVersion="4"
+        android:minSdkVersion="7"
         android:targetSdkVersion="19" />
 
     <!-- Required if you want to see outgoing calls -->
@@ -29,19 +31,21 @@
             android:exported="true"
             android:enabled="true" >
         </provider>
-    </application>
 
-</manifest>
+        <service
+            android:name="edu.unt.sell.contextmon.BroadcastMonitoringService"
+            android:label="Latest broadcast's action is:" >
 
-=======
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <application>
-        <service android:name="edu.unt.sell.contextmon.BroadcastMonitoringService"
-            android:exported="true"
-            android:enabled="true" >
         </service>
+
+        <receiver android:name="edu.unt.sell.contextmon.AnyBroadcastReceiver" android:process=":receiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>
->>>>>>> Added
+

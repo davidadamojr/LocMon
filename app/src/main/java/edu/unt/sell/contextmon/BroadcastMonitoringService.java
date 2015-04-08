@@ -2,8 +2,13 @@ package edu.unt.sell.contextmon;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentFilter.MalformedMimeTypeException;
 import android.os.IBinder;
 import android.util.Log;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class BroadcastMonitoringService extends Service {
 
@@ -59,6 +64,52 @@ public class BroadcastMonitoringService extends Service {
 
     private void registerBroadcastReceiverForActions() {
         IntentFilter intentFilter = new IntentFilter();
-        addAllKnownActions
+        addAllKnownActions(intentFilter);
+        registerReceiver(mAnyBroadcastReceiver, intentFilter);
     }
+
+    private void registerBroadcastReceiverForActionsWithDataType() throws MalformedMimeTypeException {
+        IntentFilter intentFilter = new IntentFilter();
+
+        // This is needed for broadcasts like new picture, which is data type: "image/*"
+        intentFilter.addDataType("*/*");
+
+        addAllKnownActions(intentFilter);
+        registerReceiver(mAnyBroadcastReceiver, intentFilter);
+    }
+
+    private void registerBroadcastReceiverForActionsWithSchemes() throws MalformedMimeTypeException {
+        IntentFilter intentFilter = new IntentFilter();
+
+        // needed for uninstalls
+        intentFilter.addDataScheme("package");
+
+        // needed for file system mounts
+        intentFilter.addDataScheme("file");
+
+        // other schemes
+        intentFilter.addDataScheme("geo");
+        intentFilter.addDataScheme("market");
+        intentFilter.addDataScheme("http");
+        intentFilter.addDataScheme("tel");
+        intentFilter.addDataScheme("mailto");
+        intentFilter.addDataScheme("about");
+        intentFilter.addDataScheme("https");
+        intentFilter.addDataScheme("ftps");
+        intentFilter.addDataScheme("ftp");
+        intentFilter.addDataScheme("javascript");
+
+        addAllKnownActions(intentFilter);
+        registerReceiver(mAnyBroadcastReceiver, intentFilter);
+    }
+
+    private void addAllKnownActions(IntentFilter pIntentFilter) {
+        // System broadcasts
+        List<String> sysBroadcasts = Arrays.asList(getResources().getStringArray(R.array.system_broadcast));
+        for (String sysBroadcast : sysBroadcasts) {
+            pIntentFilter.addAction(sysBroadcast);
+        }
+    }
+
+    // no need for notifications
 }
