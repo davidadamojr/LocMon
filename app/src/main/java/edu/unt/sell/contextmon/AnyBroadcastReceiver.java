@@ -1,5 +1,7 @@
 package edu.unt.sell.contextmon;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,6 +31,17 @@ public class AnyBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context pContext, Intent pIntent) {
         if (pIntent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             pContext.startService(new Intent(pContext, BroadcastMonitoringService.class));
+
+            // set the syncService alarm
+            Intent syncIntent = new Intent(pContext, SyncService.class);
+            AlarmManager alarmManager = (AlarmManager) pContext.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pendingIntent = PendingIntent.getService(pContext.getApplicationContext(), 0, syncIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            // long interval = 14400000;
+            long interval = 60000;
+            long triggerTime = System.currentTimeMillis() + interval;
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
+                    triggerTime, interval, pendingIntent);
+
         }
 
         Log.d(TAG, "Received broadcast intent is: " + pIntent.toString());
