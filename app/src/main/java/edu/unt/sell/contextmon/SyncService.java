@@ -7,6 +7,7 @@ import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.SyncHttpClient;
 
 import org.apache.http.Header;
 
@@ -24,12 +25,12 @@ public class SyncService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         BroadcastDatabaseHelper database = new BroadcastDatabaseHelper(getApplicationContext());
-        AsyncHttpClient client = new AsyncHttpClient();
+        AsyncHttpClient client = new SyncHttpClient();
         RequestParams params = new RequestParams();
         String broadcastJSON = database.composeJSONfromSQLite();
         if (!broadcastJSON.equals("[]")) {
             params.put("broadcasts_json", database.composeJSONfromSQLite());
-            client.post("http://localhost/contextmon_sync/endpoint.php", params, new AsyncHttpResponseHandler() {
+            client.post("http://10.0.3.2/contextmon_sync/endpoint.php", params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(TAG, responseBody.toString());

@@ -16,6 +16,8 @@ import java.util.Date;
 
 import edu.unt.sell.contextmon.contentprovider.BroadcastContentProvider;
 
+import static android.os.SystemClock.elapsedRealtime;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -32,10 +34,10 @@ public class MainActivity extends ActionBarActivity {
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 0, syncIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         // long interval = 14400000;
-        long interval = 60000;
-        long triggerTime = System.currentTimeMillis() + interval;
+        long interval = 5000;
+        long triggerTime = elapsedRealtime() + interval;
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-                triggerTime, interval, pendingIntent);
+                triggerTime, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
         mService = new Intent(this, BroadcastMonitoringService.class);
         startService(mService);
