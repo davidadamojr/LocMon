@@ -34,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 0, syncIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         // long interval = 14400000;
-        long interval = 5000;
+        long interval = 10000;
         long triggerTime = elapsedRealtime() + interval;
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
                 triggerTime, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);

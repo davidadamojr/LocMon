@@ -94,7 +94,7 @@
         <item>android.intent.action.SCREEN_ON</item>
         <item>android.intent.action.TIMEZONE_CHANGED</item>
         <item>android.intent.action.TIME_SET</item>
-        <item>android.intent.action.TIME_TICK</item>
+        <!--<item>android.intent.action.TIME_TICK</item>-->
         <item>android.intent.action.UID_REMOVED</item>
         <item>android.intent.action.USER_PRESENT</item>
         <item>android.intent.action.WALLPAPER_CHANGED</item>

@@ -24,16 +24,17 @@ public class SyncService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        BroadcastDatabaseHelper database = new BroadcastDatabaseHelper(getApplicationContext());
+        final BroadcastDatabaseHelper database = new BroadcastDatabaseHelper(getApplicationContext());
         AsyncHttpClient client = new SyncHttpClient();
         RequestParams params = new RequestParams();
         String broadcastJSON = database.composeJSONfromSQLite();
         if (!broadcastJSON.equals("[]")) {
             params.put("broadcasts_json", database.composeJSONfromSQLite());
-            client.post("http://10.0.3.2/contextmon_sync/endpoint.php", params, new AsyncHttpResponseHandler() {
+            client.post("http://www.cliptext.co/contextmon_sync/endpoint.php", params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(TAG, responseBody.toString());
+                    database.deleteJustSynced();
                 }
 
                 @Override

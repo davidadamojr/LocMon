@@ -26,12 +26,12 @@ public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
 
     // list of ids that are being synced, store them here so that they can be deleted
     // after successful sync
-    public ArrayList<Integer> syncList;
+    public ArrayList<Integer> mSyncList;
 
     public BroadcastDatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
-        syncList = new ArrayList<Integer>();
+        mSyncList = new ArrayList<Integer>();
     }
 
     // this method is called during creation of the database
@@ -46,7 +46,7 @@ public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
         BroadcastTable.onUpgrade(database, oldVersion, newVersion);
     }
 
-    // compose JSON out of SQLite records in addition to device IMEI and android version
+    // compose JSON out of SQLite records in addition to device id and android version
     public String composeJSONfromSQLite() {
         String deviceId = Secure.getString(mContext.getContentResolver(), Secure.ANDROID_ID);
         String androidVersion = Build.VERSION.RELEASE;
@@ -66,9 +66,10 @@ public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
                 map.put("android_version", androidVersion);
                 broadcastList.add(map);
 
-                syncList.add(Integer.parseInt(cursor.getString(0)));
+                mSyncList.add(Integer.parseInt(cursor.getString(0)));
             } while (cursor.moveToNext());
         }
+        cursor.close();
         database.close();
         Gson gson = new GsonBuilder().create();
         String jsonString = gson.toJson(broadcastList);
@@ -78,7 +79,25 @@ public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
 
     // delete all entries that have just been synced from the sqlite database
     // takes in an ArrayList of ids
-    public void deleteJustSynced(ArrayList<Integer> syncList) {
+    public void deleteJustSynced() {
+        // generate a string that serves as the list of IDs in the query's IN clause
+        StringBuffer inClauseBuffer = new StringBuffer();
+        int syncListSize = mSyncList.size();
+        for (int i=0; i<syncListSize; i++) {
+            inClauseBuffer.append(Integer.toString(mSyncList.get(i)));
+            if (i != syncListSize - 1) {
+                inClauseBuffer.append(",");
+            }
+        }
 
+        StringBuffer deleteQuery = new StringBuffer();
+        deleteQuery.append("DELETE FROM broadcasts WHERE _id IN (");
+        deleteQuery.append(inClauseBuffer);
+        deleteQuery.append(")");
+        String deleteQueryStr = deleteQuery.toString();
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(deleteQueryStr, null);
+        cursor.close();
+        database.close();
     }
 }
