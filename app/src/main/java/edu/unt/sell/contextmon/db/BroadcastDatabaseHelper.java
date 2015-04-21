@@ -95,9 +95,9 @@ public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
         deleteQuery.append(inClauseBuffer);
         deleteQuery.append(")");
         String deleteQueryStr = deleteQuery.toString();
+        Log.i(TAG, deleteQueryStr);
         SQLiteDatabase database = this.getWritableDatabase();
-        Cursor cursor = database.rawQuery(deleteQueryStr, null);
-        cursor.close();
+        database.execSQL(deleteQueryStr);
         database.close();
     }
 }

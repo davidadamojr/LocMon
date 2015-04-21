@@ -16,6 +16,8 @@ import java.util.Set;
 import edu.unt.sell.contextmon.contentprovider.BroadcastContentProvider;
 import edu.unt.sell.contextmon.db.BroadcastTable;
 
+import static android.os.SystemClock.elapsedRealtime;
+
 public class AnyBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = AnyBroadcastReceiver.class.getSimpleName();
@@ -37,10 +39,10 @@ public class AnyBroadcastReceiver extends BroadcastReceiver {
             AlarmManager alarmManager = (AlarmManager) pContext.getSystemService(Context.ALARM_SERVICE);
             PendingIntent pendingIntent = PendingIntent.getService(pContext.getApplicationContext(), 0, syncIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             // long interval = 14400000;
-            long interval = 60000;
-            long triggerTime = System.currentTimeMillis() + interval;
+            long interval = 10000;
+            long triggerTime = elapsedRealtime() + interval;
             alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-                    triggerTime, interval, pendingIntent);
+                    triggerTime, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
         }
 
