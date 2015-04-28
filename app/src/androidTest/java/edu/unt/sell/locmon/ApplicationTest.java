@@ -1,4 +1,4 @@
-package edu.unt.sell.contextmon;
+package edu.unt.sell.locmon;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

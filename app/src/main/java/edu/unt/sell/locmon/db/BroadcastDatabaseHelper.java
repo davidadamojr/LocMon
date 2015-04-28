@@ -1,4 +1,4 @@
-package edu.unt.sell.contextmon.db;
+package edu.unt.sell.locmon.db;
 
 import android.content.Context;
 import android.database.Cursor;

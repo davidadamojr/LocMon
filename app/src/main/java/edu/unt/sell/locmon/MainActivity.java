@@ -1,4 +1,4 @@
-package edu.unt.sell.contextmon;
+package edu.unt.sell.locmon;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -11,10 +11,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import java.util.Date;
-
-import edu.unt.sell.contextmon.contentprovider.BroadcastContentProvider;
+import edu.unt.sell.locmon.contentprovider.BroadcastContentProvider;
 
 import static android.os.SystemClock.elapsedRealtime;
 
@@ -29,6 +28,11 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // disable stop button
+        MenuItem stopItem = (MenuItem) findViewById(R.id.menuStop);
+        stopItem.setEnabled(false);
+
+        /*
         // set sync alarm
         Intent syncIntent = new Intent(getApplicationContext(), SyncService.class);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
@@ -39,8 +43,7 @@ public class MainActivity extends ActionBarActivity {
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
                 triggerTime, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
-        mService = new Intent(this, BroadcastMonitoringService.class);
-        startService(mService);
+        */
     }
 
 
@@ -57,6 +60,9 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        TextView serviceStatus = (TextView) findViewById(R.id.status_text);
+        MenuItem stopMenuItem = (MenuItem) findViewById(R.id.menuStop);
+        MenuItem startMenuItem = (MenuItem) findViewById(R.id.menuStart);
 
         switch (id) {
             case R.id.menuDelete:
@@ -82,6 +88,24 @@ public class MainActivity extends ActionBarActivity {
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                return true;
+            case R.id.menuStart:
+                Log.d(TAG, "Starting service.");
+                serviceStatus.setText("Service is running.");
+                startMenuItem.setEnabled(false);
+                stopMenuItem.setEnabled(true);
+
+                // start location requests here
+
+                return true;
+            case R.id.menuStop:
+                Log.d(TAG, "Stopping service.");
+                serviceStatus.setText("Service is stopped.");
+                startMenuItem.setEnabled(true);
+                stopMenuItem.setEnabled(false);
+
+                // stop location requests here
+
                 return true;
             default:
                 break;

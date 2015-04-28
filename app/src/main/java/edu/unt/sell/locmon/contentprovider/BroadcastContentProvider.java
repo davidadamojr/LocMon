@@ -1,4 +1,4 @@
-package edu.unt.sell.contextmon.contentprovider;
+package edu.unt.sell.locmon.contentprovider;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -13,8 +13,8 @@ import android.text.TextUtils;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import edu.unt.sell.contextmon.db.BroadcastDatabaseHelper;
-import edu.unt.sell.contextmon.db.BroadcastTable;
+import edu.unt.sell.locmon.db.BroadcastDatabaseHelper;
+import edu.unt.sell.locmon.db.BroadcastTable;
 
 public class BroadcastContentProvider extends ContentProvider {
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.unt.sell.contextmon"
+    package="edu.unt.sell.locmon"
     android:versionCode="7"
     android:versionName="1" >
 
@@ -16,11 +16,11 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="ContextMon"
+        android:label="LocMon"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
-            android:label="ContextMon" >
+            android:name="edu.unt.sell.locmon.MainActivity"
+            android:label="LocMon" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,29 +29,16 @@
         </activity>
 
         <provider
-            android:name=".contentprovider.BroadcastContentProvider"
-            android:authorities="edu.unt.sell.contextmon"
+            android:name="edu.unt.sell.locmon.contentprovider.BroadcastContentProvider"
+            android:authorities="edu.unt.sell.locmon"
             android:enabled="true"
             android:exported="true" >
         </provider>
 
         <service
-            android:name=".BroadcastMonitoringService"
-            android:label="Latest broadcast&apos;s action is:" >
-        </service>
-
-        <service
-            android:name=".SyncService"
+            android:name="edu.unt.sell.locmon.SyncService"
             android:label="Last sync was:">
         </service>
-
-        <receiver
-            android:name=".AnyBroadcastReceiver"
-            android:process=":receiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
 
     </application>
 

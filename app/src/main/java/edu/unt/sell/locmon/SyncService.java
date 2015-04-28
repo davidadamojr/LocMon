@@ -1,4 +1,4 @@
-package edu.unt.sell.contextmon;
+package edu.unt.sell.locmon;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import com.loopj.android.http.SyncHttpClient;
 
 import org.apache.http.Header;
 
-import edu.unt.sell.contextmon.db.BroadcastDatabaseHelper;
+import edu.unt.sell.locmon.db.BroadcastDatabaseHelper;
 
 
 public class SyncService extends IntentService {

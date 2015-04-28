@@ -1,7 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="edu.unt.sell.contextmon.MainActivity">
+    tools:context="edu.unt.sell.locmon.MainActivity">
+
+    <item
+        android:id="@+id/menuStart"
+        app:showAsAction="always"
+        android:title="Start" />
+
+    <item
+        android:id="@+id/menuStop"
+        android:title="Stop"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/menuDelete"
