@@ -11,7 +11,7 @@ import com.loopj.android.http.SyncHttpClient;
 
 import org.apache.http.Header;
 
-import edu.unt.sell.locmon.db.BroadcastDatabaseHelper;
+import edu.unt.sell.locmon.db.LocationDatabaseHelper;
 
 
 public class SyncService extends IntentService {
@@ -24,7 +24,7 @@ public class SyncService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        final BroadcastDatabaseHelper database = new BroadcastDatabaseHelper(getApplicationContext());
+        final LocationDatabaseHelper database = new LocationDatabaseHelper(getApplicationContext());
         AsyncHttpClient client = new SyncHttpClient();
         RequestParams params = new RequestParams();
         String broadcastJSON = database.composeJSONfromSQLite();

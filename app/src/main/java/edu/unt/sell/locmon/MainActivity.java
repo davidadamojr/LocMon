@@ -1,11 +1,9 @@
 package edu.unt.sell.locmon;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,15 +11,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import edu.unt.sell.locmon.contentprovider.BroadcastContentProvider;
-
-import static android.os.SystemClock.elapsedRealtime;
+import edu.unt.sell.locmon.contentprovider.LocationContentProvider;
 
 
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private Intent mService;
+
+    private Location mLastLocation;
+
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // User clicked ok button
-                        getContentResolver().delete(BroadcastContentProvider.CONTENT_URI, null, null);
+                        getContentResolver().delete(LocationContentProvider.CONTENT_URI, null, null);
                         Log.d(TAG, "All data deleted... service will now continue");
                     }
                 });

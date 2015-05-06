@@ -17,10 +17,10 @@ import java.util.HashMap;
 /**
  * Created by SELL-1 on 3/25/2015.
  */
-public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
-    private static final String TAG = BroadcastDatabaseHelper.class.getSimpleName();
+public class LocationDatabaseHelper extends SQLiteOpenHelper {
+    private static final String TAG = LocationDatabaseHelper.class.getSimpleName();
 
-    private static final String DATABASE_NAME = "broadcasts.db";
+    private static final String DATABASE_NAME = "locations.db";
     private static final int DATABASE_VERSION = 1;
     private Context mContext;
 
@@ -28,7 +28,7 @@ public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
     // after successful sync
     public ArrayList<Integer> mSyncList;
 
-    public BroadcastDatabaseHelper(Context context){
+    public LocationDatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
         mSyncList = new ArrayList<Integer>();
@@ -37,13 +37,13 @@ public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
     // this method is called during creation of the database
     @Override
     public void onCreate(SQLiteDatabase database){
-        BroadcastTable.onCreate(database);
+        LocationTable.onCreate(database);
     }
 
     // this method is called during an upgrade of the database
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion){
-        BroadcastTable.onUpgrade(database, oldVersion, newVersion);
+        LocationTable.onUpgrade(database, oldVersion, newVersion);
     }
 
     // compose JSON out of SQLite records in addition to device id and android version
@@ -52,15 +52,15 @@ public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
         String androidVersion = Build.VERSION.RELEASE;
         ArrayList<HashMap<String, String>> broadcastList;
         broadcastList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT * FROM broadcasts";
+        String selectQuery = "SELECT * FROM " + LocationTable.TABLE_NAME;
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("_id", cursor.getString(0));
-                map.put("action", cursor.getString(1));
-                map.put("extras", cursor.getString(2));
+                map.put("latitude", cursor.getString(1));
+                map.put("longitude", cursor.getString(2));
                 map.put("timestamp", cursor.getString(3));
                 map.put("device_id", deviceId);
                 map.put("android_version", androidVersion);
@@ -91,7 +91,7 @@ public class BroadcastDatabaseHelper extends SQLiteOpenHelper {
         }
 
         StringBuffer deleteQuery = new StringBuffer();
-        deleteQuery.append("DELETE FROM broadcasts WHERE _id IN (");
+        deleteQuery.append("DELETE FROM " + LocationTable.TABLE_NAME + " WHERE _id IN (");
         deleteQuery.append(inClauseBuffer);
         deleteQuery.append(")");
         String deleteQueryStr = deleteQuery.toString();

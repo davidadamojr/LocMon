@@ -13,35 +13,35 @@ import android.text.TextUtils;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import edu.unt.sell.locmon.db.BroadcastDatabaseHelper;
-import edu.unt.sell.locmon.db.BroadcastTable;
+import edu.unt.sell.locmon.db.LocationDatabaseHelper;
+import edu.unt.sell.locmon.db.LocationTable;
 
-public class BroadcastContentProvider extends ContentProvider {
+public class LocationContentProvider extends ContentProvider {
 
     // database
-    private BroadcastDatabaseHelper database;
+    private LocationDatabaseHelper database;
 
     // Used for the UriMatcher
-    private static final int BROADCASTS = 10;
-    private static final int BROADCAST_ID = 20;
+    private static final int LOCATIONS = 10;
+    private static final int LOCATION_ID = 20;
 
-    private static final String AUTHORITY = "edu.unt.sell.contextmon";
+    private static final String AUTHORITY = "edu.unt.sell.locmon";
 
-    private static final String BASE_PATH = "broadcasts";
+    private static final String BASE_PATH = "locations";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
 
-    public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/broadcasts";
-    public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/broadcast";
+    public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/locations";
+    public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/locations";
 
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static {
-        sURIMatcher.addURI(AUTHORITY, BASE_PATH, BROADCASTS);
-        sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", BROADCAST_ID);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH, LOCATIONS);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", LOCATION_ID);
     }
 
     @Override
     public boolean onCreate(){
-        database = new BroadcastDatabaseHelper(getContext());
+        database = new LocationDatabaseHelper(getContext());
         return false;
     }
 
@@ -53,15 +53,15 @@ public class BroadcastContentProvider extends ContentProvider {
         checkColumns(projection);
 
         // Set the table
-        queryBuilder.setTables(BroadcastTable.TABLE_NAME);
+        queryBuilder.setTables(LocationTable.TABLE_NAME);
 
         int uriType = sURIMatcher.match(uri);
         switch (uriType){
-            case BROADCASTS:
+            case LOCATIONS:
                 break;
-            case BROADCAST_ID:
+            case LOCATION_ID:
                 // Adding the ID to the original query
-                queryBuilder.appendWhere(BroadcastTable.COLUMN_ID + "=" + uri.getLastPathSegment());
+                queryBuilder.appendWhere(LocationTable.COLUMN_ID + "=" + uri.getLastPathSegment());
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -80,9 +80,9 @@ public class BroadcastContentProvider extends ContentProvider {
         // checks if the caller has requested a column that does not exist in the database
 
         String[] available = {
-            BroadcastTable.COLUMN_ACTION, BroadcastTable.COLUMN_EXTRAS,
-            BroadcastTable.COLUMN_TIMESTAMP, BroadcastTable.COLUMN_ID,
-            BroadcastTable.COLUMN_UPLOADED
+            LocationTable.COLUMN_LAT, LocationTable.COLUMN_LONG,
+            LocationTable.COLUMN_TIMESTAMP, LocationTable.COLUMN_ID,
+            LocationTable.COLUMN_UPLOADED
         };
         if (projection != null){
             HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
@@ -104,8 +104,8 @@ public class BroadcastContentProvider extends ContentProvider {
         SQLiteDatabase sqlDB = database.getWritableDatabase();
         long id = 0;
         switch (uriType) {
-            case BROADCASTS:
-                id = sqlDB.insert(BroadcastTable.TABLE_NAME, null, values);
+            case LOCATIONS:
+                id = sqlDB.insert(LocationTable.TABLE_NAME, null, values);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -121,15 +121,15 @@ public class BroadcastContentProvider extends ContentProvider {
         SQLiteDatabase sqlDB = database.getWritableDatabase();
         int rowsDeleted = 0;
         switch (uriType){
-            case BROADCASTS:
-                rowsDeleted = sqlDB.delete(BroadcastTable.TABLE_NAME, selection, selectionArgs);
+            case LOCATIONS:
+                rowsDeleted = sqlDB.delete(LocationTable.TABLE_NAME, selection, selectionArgs);
                 break;
-            case BROADCAST_ID:
+            case LOCATION_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection)){
-                    rowsDeleted = sqlDB.delete(BroadcastTable.TABLE_NAME, BroadcastTable.COLUMN_ID + "=" + id, null);
+                    rowsDeleted = sqlDB.delete(LocationTable.TABLE_NAME, LocationTable.COLUMN_ID + "=" + id, null);
                 } else {
-                    rowsDeleted = sqlDB.delete(BroadcastTable.TABLE_NAME, BroadcastTable.COLUMN_ID + "=" + id + " and " + selection, selectionArgs);
+                    rowsDeleted = sqlDB.delete(LocationTable.TABLE_NAME, LocationTable.COLUMN_ID + "=" + id + " and " + selection, selectionArgs);
                 }
                 break;
             default:
@@ -145,15 +145,15 @@ public class BroadcastContentProvider extends ContentProvider {
         SQLiteDatabase sqlDB = database.getWritableDatabase();
         int rowsUpdated = 0;
         switch (uriType) {
-            case BROADCASTS:
-                rowsUpdated = sqlDB.update(BroadcastTable.TABLE_NAME, values, selection, selectionArgs);
+            case LOCATIONS:
+                rowsUpdated = sqlDB.update(LocationTable.TABLE_NAME, values, selection, selectionArgs);
                 break;
-            case BROADCAST_ID:
+            case LOCATION_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection)){
-                    rowsUpdated = sqlDB.update(BroadcastTable.TABLE_NAME, values, BroadcastTable.COLUMN_ID + "=" + id, null);
+                    rowsUpdated = sqlDB.update(LocationTable.TABLE_NAME, values, LocationTable.COLUMN_ID + "=" + id, null);
                 } else {
-                    rowsUpdated = sqlDB.update(BroadcastTable.TABLE_NAME, values, BroadcastTable.COLUMN_ID + "=" + id + " and " + selection, selectionArgs);
+                    rowsUpdated = sqlDB.update(LocationTable.TABLE_NAME, values, LocationTable.COLUMN_ID + "=" + id + " and " + selection, selectionArgs);
                 }
                 break;
             default:
