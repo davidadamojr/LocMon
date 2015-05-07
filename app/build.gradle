@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "edu.unt.sell.contextmon"
+        applicationId "edu.unt.sell.locmon"
         minSdkVersion 9
         targetSdkVersion 19
         versionCode 1

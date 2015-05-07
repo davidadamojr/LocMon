@@ -21,29 +21,16 @@ public class MainActivity extends ActionBarActivity {
 
     private Location mLastLocation;
 
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mService = new Intent(this, LocationMonitorService.class);
+
         // disable stop button
-        MenuItem stopItem = (MenuItem) findViewById(R.id.menuStop);
-        stopItem.setEnabled(false);
-
-        /*
-        // set sync alarm
-        Intent syncIntent = new Intent(getApplicationContext(), SyncService.class);
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 0, syncIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        // long interval = 14400000;
-        long interval = 10000;
-        long triggerTime = elapsedRealtime() + interval;
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-                triggerTime, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
-
-        */
+        // MenuItem stopItem = (MenuItem) findViewById(R.id.menuStop);
+        // stopItem.setEnabled(false);
     }
 
 
@@ -61,8 +48,8 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         TextView serviceStatus = (TextView) findViewById(R.id.status_text);
-        MenuItem stopMenuItem = (MenuItem) findViewById(R.id.menuStop);
-        MenuItem startMenuItem = (MenuItem) findViewById(R.id.menuStart);
+        // MenuItem stopMenuItem = (MenuItem) findViewById(R.id.menuStop);
+        // MenuItem startMenuItem = (MenuItem) findViewById(R.id.menuStart);
 
         switch (id) {
             case R.id.menuDelete:
@@ -92,20 +79,20 @@ public class MainActivity extends ActionBarActivity {
             case R.id.menuStart:
                 Log.d(TAG, "Starting service.");
                 serviceStatus.setText("Service is running.");
-                startMenuItem.setEnabled(false);
-                stopMenuItem.setEnabled(true);
+                // startMenuItem.setEnabled(false);
+                // stopMenuItem.setEnabled(true);
 
-                // start location requests here
-
+                // start location requests
+                startService(mService);
                 return true;
             case R.id.menuStop:
                 Log.d(TAG, "Stopping service.");
                 serviceStatus.setText("Service is stopped.");
-                startMenuItem.setEnabled(true);
-                stopMenuItem.setEnabled(false);
+                // startMenuItem.setEnabled(true);
+                // stopMenuItem.setEnabled(false);
 
-                // stop location requests here
-
+                // stop location requests
+                stopService(mService);
                 return true;
             default:
                 break;

@@ -47,6 +47,7 @@ public class LocationMonitorService extends Service
         if (checkPlayServices()) {
             buildGoogleApiClient();
             createLocationRequest();
+            mGoogleApiClient.connect();
         }
     }
 
@@ -68,21 +69,34 @@ public class LocationMonitorService extends Service
         return true;
     }
 
+    public void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
     @Override
     public void onConnected(Bundle connectionHint) {
         // save last known location in database
         // start update requests
+        Log.i(TAG, "Google play services is connected...");
+
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
             saveLocation();
         }
 
-        // start location updates
         startLocationUpdates();
     }
 
     public void startLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        saveLocation();
     }
 
     public void saveLocation() {
@@ -97,18 +111,6 @@ public class LocationMonitorService extends Service
         getContentResolver().insert(LocationContentProvider.CONTENT_URI, values);
 
         Log.i(TAG, "Saved location data, latitude: " + Double.toString(latitude) + ", longitude: " + Double.toString(longitude));
-    }
-
-    public void onLocationChanged(Location location) {
-        mLastLocation = location;
-        saveLocation();
-    }
-
-    public void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     @Override
@@ -136,9 +138,12 @@ public class LocationMonitorService extends Service
     @Override
     public void onDestroy() {
         // stop location updates
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            Log.d(TAG, "stopping location requests.");
+        }
 
-        Log.d(TAG, "onDestroy");
+        Log.d(TAG, "Destroying service... ");
         super.onDestroy();
     }
 }
