@@ -14,6 +14,11 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/menuExport"
+        android:title="Export Data"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menuDelete"
         android:icon="@android:drawable/ic_menu_delete"
         app:showAsAction="always"

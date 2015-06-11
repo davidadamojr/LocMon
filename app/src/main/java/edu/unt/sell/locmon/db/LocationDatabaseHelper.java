@@ -46,7 +46,7 @@ public class LocationDatabaseHelper extends SQLiteOpenHelper {
         LocationTable.onUpgrade(database, oldVersion, newVersion);
     }
 
-    // compose JSON out of SQLite records in addition to device id and android version
+    // compose JSON out of SQLite records, add device id and android version
     public String composeJSONfromSQLite() {
         String deviceId = Secure.getString(mContext.getContentResolver(), Secure.ANDROID_ID);
         String androidVersion = Build.VERSION.RELEASE;
@@ -99,5 +99,20 @@ public class LocationDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         database.execSQL(deleteQueryStr);
         database.close();
+    }
+
+    public boolean checkDatabaseEmpty() {
+        int rowCount;
+        boolean databaseEmpty;
+        String contentQuery = "SELECT * FROM " + LocationTable.TABLE_NAME;
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(contentQuery, null);
+        rowCount = cursor.getCount();
+        if (rowCount == 0) {
+            databaseEmpty = true;
+        } else {
+            databaseEmpty = false;
+        }
+        return databaseEmpty;
     }
 }
