@@ -1,16 +1,20 @@
 package edu.unt.sell.locmon;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -25,8 +29,6 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private Intent mService;
-
-    private Location mLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +81,39 @@ public class MainActivity extends ActionBarActivity {
                 } else {
                     // create json file to be exported via email
                     // json file name should be locations + current timestamp
+
+                    // make sure the device's external storage is actually available
                     if (isExternalStorageWritable()) {
                         String jsonData = database.composeJSONfromSQLite();
                         String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
                         String filename = "locations_" + timestamp + ".json";
                         TextWriter textWriter = new TextWriter(filename);
                         textWriter.writeText(jsonData);
+
+                        // retrieve the newly written file so it can be sent as an email attachment
+                        File dataFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+
+                        // handle the situation where, for some reason, the file cannot be found
+                        if (!dataFile.exists()){
+                            Toast noFileToast = Toast.makeText(MainActivity.this, "Could not find data file to export.", Toast.LENGTH_SHORT);
+                            noFileToast.show();
+                            return true;
+                        }
+
+                        Uri dataFileUri = Uri.fromFile(dataFile);
+
+                        // easiest way to send this file as an attachment is to simply use an intent
+                        // to open an email application with the file attached
+                        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                        emailIntent.setType("application/octet-stream");
+                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Sensor Data from " + deviceId);
+                        emailIntent.putExtra(Intent.EXTRA_STREAM, dataFileUri);
+                        try {
+                            startActivity(Intent.createChooser(emailIntent, "Export to Email"));
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT);
+                        }
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
@@ -110,6 +139,8 @@ public class MainActivity extends ActionBarActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // User clicked ok button
                         getContentResolver().delete(LocationContentProvider.CONTENT_URI, null, null);
+                        Toast deleteConfirm = Toast.makeText(MainActivity.this, "All data deleted.", Toast.LENGTH_SHORT);
+                        deleteConfirm.show();
                         Log.d(TAG, "All data deleted... service will now continue");
                     }
                 });
