@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.Settings;

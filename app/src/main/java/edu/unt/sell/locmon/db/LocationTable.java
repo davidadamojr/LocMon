@@ -12,7 +12,7 @@ public class LocationTable {
     public static final String TABLE_NAME = "locations";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_LAT = "latitude";
-    public static final String COLUMN_LONG = "longitute";
+    public static final String COLUMN_LONG = "longitude";
     public static final String COLUMN_TIMESTAMP = "timestamp";
     public static final String COLUMN_UPLOADED = "uploaded";
 
