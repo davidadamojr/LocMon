@@ -16,39 +16,12 @@
     <item
         android:id="@+id/menuExport"
         android:title="Export Data"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menuDelete"
         android:icon="@android:drawable/ic_menu_delete"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="Delete Data" />
 
-</menu>
-
-
-
-
-
-    <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:android="http://schemas.android.com/apk/res/android">
-<item
-    android:id="@+id/menuStart"
-    app:showAsAction="always"
-    android:title="Start" />
-
-<item
-    android:id="@+id/menuStop"
-    android:title="Stop"
-    app:ShowAsAction="always" />
-
-<item
-    android:id="@+id/menuDelete"
-    android:icon="@android:drawable/ic_menu_delete"
-    app:showAsAction="always" />
-
-<item
-    android:id="@+id/menuExport"
-    android:title="Export Data" />
 </menu>
